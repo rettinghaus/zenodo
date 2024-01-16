@@ -38,27 +38,27 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [2.7]
+        python-version: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
         SQLALCHEMY_DATABASE_URI: [
           "postgresql+psycopg2://postgres@localhost:5432/zenodo"]
         REQUIREMENTS: ['prod']
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Use Node.js 6.x
-        uses: actions/setup-node@v1
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
         with:
-          node-version: 6.x
+          node-version: 20.x
 
       - name: Install global Node packages
         run: |
@@ -73,7 +73,7 @@ jobs:
           cat requirements.txt > .prod-requirements.txt
 
       - name: Cache pip
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('.prod-requirements.txt') }}
